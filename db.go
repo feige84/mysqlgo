@@ -148,6 +148,104 @@ func (d *DbLib) Insert(table string, data DbRow) (int64, error) {
 	return lastInsertId, nil
 }
 
+/*
+//批量插入，未完成。
+data := DbRow{}
+data["creative_id"] = 4444
+data["web_url"] = "yyyyy"
+result, err := MyDb.Insert("dy_ad", data)
+*/
+func (d *DbLib) InsertMulti(table string, data interface{}) (int64, error) {
+
+	sind := reflect.Indirect(reflect.ValueOf(data))
+
+	switch sind.Kind() {
+	case reflect.Array, reflect.Slice:
+		if sind.Len() == 0 {
+			return 0, fmt.Errorf("args error may be empty")
+		}
+	case reflect.Map:
+		if oneData, ok := data.(DbRow); ok {
+			return d.Insert(table, oneData)
+		}
+		return 0, fmt.Errorf("args is not DbRow")
+	default:
+		return 0, fmt.Errorf("args error may be empty")
+	}
+
+	fields := make([]string, 0)
+	values := make([]interface{}, 0)
+	placeHolder := make([]string, 0)
+
+	i := 0
+	for _, d := range data.([]DbRow) {
+		for f, v := range d {
+			if i == 0 {
+				fields = append(fields, f) //第一次取值的时候取字段
+			}
+			values = append(values, v)
+			placeHolder = append(placeHolder, "?")
+		}
+		fmt.Println("fields:", fields)
+		i++
+	}
+
+	marks := make([]string, len(fields))
+	for i := range marks {
+		marks[i] = "?"
+	}
+	Q := "`"
+	sep := fmt.Sprintf("%s, %s", Q, Q)
+	qmarks := strings.Join(marks, ", ")
+	columns := strings.Join(fields, sep)
+
+	multi := len(values) / len(fields)
+	qmarks = strings.Repeat(qmarks+"), (", multi-1) + qmarks
+
+	query := fmt.Sprintf("INSERT INTO %s%s%s (%s%s%s) VALUES (%s)", Q, table, Q, Q, columns, Q, qmarks)
+	fmt.Println("query:", query, values)
+	//sqlStr := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s) ", table, strings.Join(fields, ","), strings.Join(placeHolder, ","))
+	/*
+		fields := make([]string, 0)
+		vals := make([]interface{}, 0)
+		placeHolder := make([]string, 0)
+
+		for f, v := range data {
+			fields = append(fields, f)
+			vals = append(vals, v)
+			placeHolder = append(placeHolder, "?")
+		}
+
+		sqlStr := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s) ", table, strings.Join(fields, ","), strings.Join(placeHolder, ","))
+		if d.Debug {
+			fmt.Println(sqlStr, vals)
+		}
+		result, err := d.Db.Exec(sqlStr, vals...)
+		if err != nil {
+			return 0, fmt.Errorf("insert error: %s\n%s", err, debug.Stack())
+		}
+
+		lastInsertId, err := result.LastInsertId()
+		if err != nil {
+			return 0, fmt.Errorf("get insert lastid error: %s\n%s", err, debug.Stack())
+		}
+
+		//这里是有些表没有自增主键。获取不到insertLastId。就获取影响行数。
+		if lastInsertId == 0 {
+			rowsAffected, err := result.RowsAffected()
+			if err != nil {
+				return 0, fmt.Errorf("get insert rows affected error: %s\n%s", err, debug.Stack())
+			}
+			if rowsAffected > 0 {
+				return rowsAffected, nil
+			}
+		}
+
+		return lastInsertId, nil
+	*/
+	return 0, nil
+}
+
 // 更新记录
 /*
 data := DbRow{}
