@@ -9,7 +9,7 @@ import (
 func TestExecute(t *testing.T) {
 	//fmt.Println("return:", data7, apiErr7)
 	var err error
-	MyDb, err = NewDbLib("mysql", fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=utf8", "root", "tanfei19", "tcp", "127.0.0.1", 3306, "doudashi"))
+	MyDb, err = NewDbLib("mysql", fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=utf8", "root", "xxxx", "tcp", "127.0.0.1", 3306, "doudashi"))
 	if err != nil {
 		panic(err)
 	}
