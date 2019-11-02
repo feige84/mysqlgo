@@ -102,6 +102,22 @@ func (d *DbLib) GetAll(sql string, args ...interface{}) ([]DbRow, error) {
 
 }
 
+//直接插入
+func (d *DbLib) Exists(table, field string, value interface{}) bool {
+	var tmp interface{}
+	err := d.Db.QueryRow(fmt.Sprintf("SELECT `%s` FROM `%s` WHERE `%s`=? LIMIT 1", field, table, field), value).Scan(&tmp)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false
+		}
+		panic(err)
+	}
+	if tmp != nil {
+		return true
+	}
+	return false
+}
+
 // 写入记录
 /*
 data := DbRow{}

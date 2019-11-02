@@ -3,13 +3,12 @@ package mysqlgo
 import (
 	"fmt"
 	"testing"
-	"time"
 )
 
 func TestExecute(t *testing.T) {
 	//fmt.Println("return:", data7, apiErr7)
 	var err error
-	MyDb, err = NewDbLib("mysql", fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=utf8", "root", "xxxx", "tcp", "127.0.0.1", 3306, "doudashi"))
+	MyDb, err = NewDbLib("mysql", fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=utf8", "root", "xxxxxxx", "tcp", "127.0.0.1", 3306, "doudashi"))
 	if err != nil {
 		panic(err)
 	}
@@ -33,11 +32,6 @@ func TestExecute(t *testing.T) {
 	//	},
 	//}
 
-	data := DbRow{
-		"q_id":       44444444,
-		"q_dateline": time.Now().Unix(),
-		"q_status":   1,
-	}
-	rows, err := MyDb.ReplaceInto("dy_goods_queue", data)
-	fmt.Println(rows, err)
+	exists := MyDb.Exists("dy_goods", "product_id", 111111111)
+	fmt.Println(exists)
 }
