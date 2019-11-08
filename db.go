@@ -295,11 +295,11 @@ func (d *DbLib) Update(table, condition string, data DbRow, args ...interface{})
 	vals := make([]interface{}, 0)
 
 	for f, v := range data {
-		params = append(params, f+"=?")
+		params = append(params, "`"+f+"`=?")
 		vals = append(vals, v)
 	}
 
-	sqlStr := "UPDATE %s SET %s"
+	sqlStr := "UPDATE `%s` SET %s"
 	if condition != "" {
 		sqlStr += " WHERE %s"
 		sqlStr = fmt.Sprintf(sqlStr, table, strings.Join(params, ","), condition)
@@ -329,7 +329,7 @@ func (d *DbLib) Update(table, condition string, data DbRow, args ...interface{})
 result, err := MyDb.Delete("dy_ad", "ad_id=?", 111)
 */
 func (d *DbLib) Delete(table, condition string, args ...interface{}) (int64, error) {
-	sqlStr := "DELETE FROM %s "
+	sqlStr := "DELETE FROM `%s` "
 	if condition != "" {
 		sqlStr += "WHERE %s"
 		sqlStr = fmt.Sprintf(sqlStr, table, condition)
