@@ -21,13 +21,13 @@ type DbLib struct {
 	Debug bool
 }
 
-func NewDbLib(driver, dsn string) (*DbLib, error) {
+func NewDbLib(driver, dsn string, maxOpenConns, maxIdsleConns int) (*DbLib, error) {
 	db, err := sql.Open(driver, dsn)
 	if err != nil {
 		return nil, fmt.Errorf("Sql open error: %s\n%s", err, debug.Stack())
 	}
-	db.SetMaxOpenConns(20)
-	db.SetMaxIdleConns(20)
+	db.SetMaxOpenConns(maxOpenConns)
+	db.SetMaxIdleConns(maxIdsleConns)
 	db.SetConnMaxLifetime(43200 * time.Second)
 	if err = db.Ping(); err != nil {
 		return nil, fmt.Errorf("Db ping error: %s\n%s", err, debug.Stack())
