@@ -3,13 +3,12 @@ package mysqlgo
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"math"
 	"reflect"
 	"runtime/debug"
 	"strings"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var MyDb *DbLib
@@ -21,14 +20,16 @@ type DbLib struct {
 	Debug bool
 }
 
-func NewDbLib(driver, dsn string, maxOpenConns, maxIdsleConns int) (*DbLib, error) {
+func NewDbLib(driver, dsn string, maxOpenConns, maxIdsleConns, maxLife int) (*DbLib, error) {
 	db, err := sql.Open(driver, dsn)
 	if err != nil {
 		return nil, fmt.Errorf("Sql open error: %s\n%s", err, debug.Stack())
 	}
 	db.SetMaxOpenConns(maxOpenConns)
 	db.SetMaxIdleConns(maxIdsleConns)
-	db.SetConnMaxLifetime(43200 * time.Second)
+	if maxLife > 0 {
+		db.SetConnMaxLifetime(time.Duration(maxLife) * time.Second)
+	}
 	if err = db.Ping(); err != nil {
 		return nil, fmt.Errorf("Db ping error: %s\n%s", err, debug.Stack())
 	}
