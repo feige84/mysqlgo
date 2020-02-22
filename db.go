@@ -373,6 +373,14 @@ func (d *DbLib) Execute(sqlStr string, args ...interface{}) (int64, error) {
 	return int64(math.Max(float64(rowsAffected), float64(lastInsertId))), nil
 }
 
+//拼接条件
+func (d *DbLib) JoinWhere(wheres []string) string {
+	if len(wheres) > 0 {
+		return strings.Join(wheres, " AND ")
+	}
+	return ""
+}
+
 func Struct2Map(structData interface{}) map[string]interface{} {
 	if structData != nil {
 		result := make(map[string]interface{})
