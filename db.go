@@ -2,11 +2,13 @@ package mysqlgo
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"math"
 	"reflect"
 	"runtime/debug"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -396,4 +398,78 @@ func Struct2Map(structData interface{}) map[string]interface{} {
 		return result
 	}
 	return nil
+}
+
+//将结构体里的成员按照json名字来赋值
+func SetStructField(ptr interface{}, fields map[string]interface{}) error {
+	structObj := reflect.ValueOf(ptr).Elem() // the struct variable
+	structObjNum := structObj.NumField()
+	for i := 0; i < structObjNum; i++ {
+		fieldInfo := structObj.Type().Field(i) // a reflect.StructField
+		structObjValue := structObj.FieldByName(fieldInfo.Name)
+
+		structObjName := fieldInfo.Tag.Get("sql")
+		if structObjName == "" {
+			structObjName = strings.ToLower(fieldInfo.Name)
+		} else {
+			//去掉逗号后面内容 如 `json:"voucher_usage,omitempty"`
+			structObjName = strings.Split(structObjName, ",")[0]
+		}
+
+		if !structObjValue.IsValid() {
+			return fmt.Errorf("no such field: %s in obj", structObjName)
+		}
+		if !structObjValue.CanSet() {
+			return fmt.Errorf("cannot set %s field value", structObjName)
+		}
+		if value, ok := fields[structObjName]; ok {
+			val := reflect.ValueOf(value) //map值的反射值
+			if val.Type() != structObjValue.Type() {
+				//类型不同需要转换
+				var err error
+				val, err = TypeConversion(fmt.Sprintf("%v", value), structObjValue.Type().Name()) //类型转换
+				if err != nil {
+					return err
+				}
+			}
+			//赋值
+			structObjValue.Set(val)
+		}
+	}
+	return nil
+}
+
+//类型转换
+func TypeConversion(value string, nType string) (reflect.Value, error) {
+	if nType == "string" {
+		return reflect.ValueOf(value), nil
+	} else if nType == "time.Time" {
+		t, err := time.ParseInLocation("2006-01-02 15:04:05", value, time.Local)
+		return reflect.ValueOf(t), err
+	} else if nType == "Time" {
+		t, err := time.ParseInLocation("2006-01-02 15:04:05", value, time.Local)
+		return reflect.ValueOf(t), err
+	} else if nType == "int" {
+		i, err := strconv.Atoi(value)
+		return reflect.ValueOf(i), err
+	} else if nType == "int8" {
+		i, err := strconv.ParseInt(value, 10, 64)
+		return reflect.ValueOf(int8(i)), err
+	} else if nType == "int32" {
+		i, err := strconv.ParseInt(value, 10, 64)
+		return reflect.ValueOf(int64(i)), err
+	} else if nType == "int64" {
+		i, err := strconv.ParseInt(value, 10, 64)
+		return reflect.ValueOf(i), err
+	} else if nType == "float32" {
+		i, err := strconv.ParseFloat(value, 64)
+		return reflect.ValueOf(float32(i)), err
+	} else if nType == "float64" {
+		i, err := strconv.ParseFloat(value, 64)
+		return reflect.ValueOf(i), err
+	}
+
+	//else if .......增加其他一些类型的转换
+
+	return reflect.ValueOf(value), errors.New("未知的类型：" + nType)
 }
