@@ -68,7 +68,7 @@ func (s *SelectSql) Count(field ...string) *SelectSql {
 	return s
 }
 
-func (s *SelectSql) BuildSql() (str string, args []interface{}) {
+func (s *SelectSql) BuildSQL() (str string, args []interface{}) {
 	if s.raw != "" {
 		str = s.raw
 		return
