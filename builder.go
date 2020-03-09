@@ -14,6 +14,7 @@ type SelectSql struct {
 	limit         interface{}
 	tableName     string
 	raw           string
+	isCount       string
 }
 
 func (s *SelectSql) Table(name string) *SelectSql {
@@ -58,6 +59,15 @@ func (s *SelectSql) Raw(b string) *SelectSql {
 	return s
 }
 
+func (s *SelectSql) Count(field ...string) *SelectSql {
+	if len(field) <= 0 {
+		s.isCount = "COUNT(*)"
+	} else {
+		s.isCount = "COUNT(" + field[0] + ")"
+	}
+	return s
+}
+
 func (s *SelectSql) BuildSql() (str string, args []interface{}) {
 	if s.raw != "" {
 		str = s.raw
@@ -68,14 +78,20 @@ func (s *SelectSql) BuildSql() (str string, args []interface{}) {
 		panic(fmt.Errorf("table is null"))
 	}
 
-	fields := "*"
-	if s.fields != nil {
-		switch value := s.fields.(type) {
-		case string:
-			fields = value
-		case []string:
-			fields = strings.Join(value, ", ")
+	fields := ""
+	if s.isCount == "" {
+		if s.fields != nil {
+			switch value := s.fields.(type) {
+			case string:
+				fields = value
+			case []string:
+				fields = strings.Join(value, ", ")
+			}
+		} else {
+			fields = "*"
 		}
+	} else {
+		fields = s.isCount
 	}
 
 	var andConditions []string
@@ -94,33 +110,35 @@ func (s *SelectSql) BuildSql() (str string, args []interface{}) {
 		}
 	}
 
-	if s.group != "" {
-		where += " GROUP BY " + s.group
-	}
-
-	var orders []string
-	if s.orders != nil {
-		for _, order := range s.orders {
-			orders = append(orders, order)
+	if s.isCount == "" {
+		if s.group != "" {
+			where += " GROUP BY " + s.group
 		}
-		where += " ORDER BY " + strings.Join(orders, ",")
-	}
 
-	if s.limit != nil {
-		switch value := s.limit.(type) {
-		case int, int64:
-			where += fmt.Sprintf(" LIMIT %d ", value)
+		var orders []string
+		if s.orders != nil {
+			for _, order := range s.orders {
+				orders = append(orders, order)
+			}
+			where += " ORDER BY " + strings.Join(orders, ",")
 		}
-	}
 
-	if s.offset != nil {
-		switch value := s.offset.(type) {
-		case int, int64:
-			where += fmt.Sprintf(" OFFSET %d ", value)
+		if s.limit != nil {
+			switch value := s.limit.(type) {
+			case int, int64:
+				where += fmt.Sprintf(" LIMIT %d ", value)
+			}
+		}
+
+		if s.offset != nil {
+			switch value := s.offset.(type) {
+			case int, int64:
+				where += fmt.Sprintf(" OFFSET %d ", value)
+			}
 		}
 	}
 
 	query := strings.Replace(fmt.Sprintf("SELECT %v FROM %v %v", fields, s.tableName, where), "  ", " ", -1)
-
+	s.isCount = ""
 	return query, args
 }
