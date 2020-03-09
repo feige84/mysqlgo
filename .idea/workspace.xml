@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1f3e24e4-f7e4-4a0e-ba6d-304ecc8ce619" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/builder.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/builder_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/db_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/builder_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/builder_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,33 +97,34 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="set max" />
-    <option name="LAST_COMMIT_MESSAGE" value="set max" />
+    <MESSAGE value="简单的拼接sql" />
+    <option name="LAST_COMMIT_MESSAGE" value="简单的拼接sql" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="4769" y="293" key="CommitChangelistDialog2" timestamp="1582358423891">
+    <state x="4769" y="293" key="CommitChangelistDialog2" timestamp="1583735942954">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>
-    <state x="4769" y="293" key="CommitChangelistDialog2/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1582358423891" />
-    <state width="2539" height="401" key="GridCell.Tab.0.bottom" timestamp="1583735916722">
+    <state x="4769" y="293" key="CommitChangelistDialog2/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583735942954" />
+    <state width="2539" height="400" key="GridCell.Tab.0.bottom" timestamp="1583736039472">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583735916722" />
-    <state width="2539" height="401" key="GridCell.Tab.0.center" timestamp="1583735916722">
+    <state width="2539" height="400" key="GridCell.Tab.0.bottom/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583736039472" />
+    <state width="2539" height="400" key="GridCell.Tab.0.center" timestamp="1583736039472">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583735916722" />
-    <state width="2539" height="401" key="GridCell.Tab.0.left" timestamp="1583735916722">
+    <state width="2539" height="400" key="GridCell.Tab.0.center/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583736039472" />
+    <state width="2539" height="400" key="GridCell.Tab.0.left" timestamp="1583736039472">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583735916722" />
-    <state width="2539" height="401" key="GridCell.Tab.0.right" timestamp="1583735916722">
+    <state width="2539" height="400" key="GridCell.Tab.0.left/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583736039472" />
+    <state width="2539" height="400" key="GridCell.Tab.0.right" timestamp="1583736039472">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583735916722" />
-    <state x="4713" y="434" key="Vcs.Push.Dialog.v2" timestamp="1582358426434">
+    <state width="2539" height="400" key="GridCell.Tab.0.right/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583736039472" />
+    <state x="4713" y="434" key="Vcs.Push.Dialog.v2" timestamp="1583735945002">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>
-    <state x="4713" y="434" key="Vcs.Push.Dialog.v2/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1582358426434" />
+    <state x="4713" y="434" key="Vcs.Push.Dialog.v2/0.0.2560.1400/3840.0.2560.1400@3840.0.2560.1400" timestamp="1583735945002" />
     <state x="4805" y="433" width="631" height="534" key="find.popup" timestamp="1583732514818">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>
